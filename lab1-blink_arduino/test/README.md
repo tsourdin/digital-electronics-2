@@ -9,7 +9,7 @@
 #define LED_GREEN PB5
 #define PB5 13
 #define SHORT_DELAY 250 // Delay in millisecond for a dot, or the delay between two signals
-#define LONG_DELAY 750 // Delay in millisecond for a comma, or the delay between two words
+#define LONG_DELAY 750 // Delay in millisecond for a comma, or the delay between two characters
 
 int main(void)
 {
@@ -19,19 +19,23 @@ int main(void)
     // Infinite loop
     while (1)
     {
-        // Generate a lettre `A` Morse code
+        // Generate a letter `A` Morse code
 
+        // dot
         digitalWrite(LED_GREEN, HIGH);
-        _delay_ms(SHORT_DELAY); // dot
+        _delay_ms(SHORT_DELAY);
 
-        digitalWrite(LED_GREEN, HIGH);
-        _delay_ms(SHORT_DELAY); // delay between dot and comma
+        // delay between dot and comma
+        digitalWrite(LED_GREEN, LOW);
+        _delay_ms(SHORT_DELAY);
 
+        // comma
         digitalWrite(LED_GREEN, HIGH);
-        _delay_ms(LONG_DELAY); // comma
+        _delay_ms(LONG_DELAY);
 
-        digitalWrite(LED_GREEN, HIGH);
-        _delay_ms(LONG_DELAY); // delay before the next A
+        // delay before the next A
+        digitalWrite(LED_GREEN, LOW);
+        _delay_ms(LONG_DELAY);
 
     }
 
