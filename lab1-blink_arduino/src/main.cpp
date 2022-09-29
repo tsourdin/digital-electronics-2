@@ -13,7 +13,12 @@
 /* Defines -----------------------------------------------------------*/
 #define LED_GREEN PB5   // PB5 is AVR pin where green on-board LED 
                         // is connected
-#define SHORT_DELAY 250 // Delay in milliseconds
+#define DIT_DELAY           250     // Delay in milliseconds for a DIT (dot)
+#define DAH_DELAY           750     // Delay in millisecond for a DAH (comma)
+#define INTRA_CHAR_DELAY    250     // Delay between DIT and DAH
+#define INTER_CHAR_DELAY    750     // Delay between two chars
+#define WORD_SPACE_DELAY    1750    // Delay between two words
+
 #ifndef F_CPU
 # define F_CPU 16000000 // CPU frequency in Hz required for delay funcs
 #endif
@@ -33,31 +38,80 @@
 
 /* Function definitions ----------------------------------------------*/
 /**********************************************************************
+ * Function:    dit(uint8_t pin)
+ * Purpose:     write a dit (dot) to the pin specified as a parameter
+ * Returns:     none
+ **********************************************************************/
+void dit(uint8_t pin){
+    digitalWrite(LED_GREEN, HIGH);
+    _delay_ms(DIT_DELAY);
+    digitalWrite(LED_GREEN, LOW);
+}
+
+/**********************************************************************
+ * Function:    dah(uint8_t pin)
+ * Purpose:     write a dah (comma) to the pin specified as a parameter
+ * Returns:     none
+ **********************************************************************/
+void dah(uint8_t pin){
+    digitalWrite(LED_GREEN, HIGH);
+    _delay_ms(DAH_DELAY);
+    digitalWrite(LED_GREEN, LOW);
+}
+
+
+/**********************************************************************
  * Function: Main function where the program execution begins
  * Purpose:  Toggle one LED and use delay library.
  * Returns:  none
  **********************************************************************/
 int main(void)
 {
-    uint8_t led_value = LOW;  // Local variable to keep LED status
-
     // Set pin where on-board LED is connected as output
     pinMode(LED_GREEN, OUTPUT);
 
     // Infinite loop
     while (1)
     {
-        // Turn ON/OFF on-board LED
-        digitalWrite(LED_GREEN, led_value);
+        // PARIS i morse
 
-        // Pause several milliseconds
-        _delay_ms(SHORT_DELAY);
+        // Generate a lettre `P` Morse code : .--.
+        dit(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dah(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dah(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dit(LED_GREEN);
+        _delay_ms(INTER_CHAR_DELAY);
+        
+        // Generate a lettre `A` Morse code : .-
+        dit(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dah(LED_GREEN);
+        _delay_ms(INTER_CHAR_DELAY);
 
-        // Change LED value
-        if (led_value == LOW)
-            led_value = HIGH;
-        else
-            led_value = LOW;
+        // Generate a lettre `R` Morse code : .-.
+        dit(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dah(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dit(LED_GREEN);
+        _delay_ms(INTER_CHAR_DELAY);
+
+        // Generate a lettre `I` Morse code : ..
+        dit(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dit(LED_GREEN);
+        _delay_ms(INTER_CHAR_DELAY);
+
+        // Generate a lettre `S` Morse code : ...
+        dit(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dit(LED_GREEN);
+        _delay_ms(INTRA_CHAR_DELAY);
+        dit(LED_GREEN);
+        _delay_ms(WORD_SPACE_DELAY);
     }
 
     // Will never reach this
