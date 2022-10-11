@@ -53,6 +53,9 @@ int main(void)
     // DDRB |= (1 << LED_RED); // LED_GREEN = PB0 = 0
     GPIO_mode_output(&DDRB, LED_RED);
 
+    // Led connected to PD2
+    GPIO_mode_input_pullup(&DDRD, PD2);
+
     // Example:
     //   1100 0010
     // | 0010 0000
@@ -62,37 +65,57 @@ int main(void)
     // Infinite loop
     while (1)
     {
-        // Turn ON/OFF on-board LED ...
-        // digitalWrite(LED_GREEN, led_value); // Arduino library function
-        // ... and external LED as well
-        // digitalWrite(LED_RED, led_value);
-        // Pause several milliseconds
-        _delay_ms(SHORT_DELAY);
+      // Turn ON/OFF on-board LED ...
+      // digitalWrite(LED_GREEN, led_value); // Arduino library function
+      // ... and external LED as well
+      // digitalWrite(LED_RED, led_value);
+      // Pause several milliseconds
+      _delay_ms(SHORT_DELAY);
 
-        /*
-        // Change LED value
-        if (led_value == 0){
-          led_value = 1;
-          //PORTB |= (1 << LED_GREEN);
-          //PORTB |= (1 << LED_RED);
-          GPIO_write_high(&PORTB, LED_GREEN);
-          GPIO_write_high(&PORTB, LED_RED);
-        }  
-        else{
-          led_value = 0;
-          //PORTB &= ~(1 << LED_GREEN);
-          //PORTB &= ~(1 << LED_RED);
-          GPIO_write_low(&PORTB, LED_GREEN);
-          GPIO_write_low(&PORTB, LED_RED);
-        }
-        */
+      // Code lab blink
+      
+      // Solution with if statement 
+      /*
+      if (led_value == 0){
 
-       //PORTB ^= (1 << LED_GREEN);
-       //PORTB ^= (1 << LED_RED);
-       GPIO_write_toggle(&PORTB, LED_GREEN);
-       GPIO_write_toggle(&PORTB, LED_RED);
-       
+        led_value = 1;
+        // With registers
+        //PORTB |= (1 << LED_GREEN);
+        //PORTB |= (1 << LED_RED);
 
+        // With Library
+        GPIO_write_high(&PORTB, LED_GREEN); // Library
+        GPIO_write_high(&PORTB, LED_RED);
+      }  
+      else{
+
+        led_value = 0;
+
+        // With registers
+        //PORTB &= ~(1 << LED_GREEN);
+        //PORTB &= ~(1 << LED_RED);
+
+        // With library
+        GPIO_write_low(&PORTB, LED_GREEN);
+        GPIO_write_low(&PORTB, LED_RED);
+      } */
+      
+      // Solution with toggle :
+
+      // With registers
+      //PORTB ^= (1 << LED_GREEN);
+      //PORTB ^= (1 << LED_RED);
+
+      // With library
+      // GPIO_write_toggle(&PORTB, LED_GREEN);
+      // GPIO_write_toggle(&PORTB, LED_RED);
+      
+
+      // Optional :
+      if(GPIO_read(&PORTD,PD2)==0){
+        GPIO_write_toggle(&PORTB,LED_GREEN);
+        GPIO_write_toggle(&PORTB,LED_RED);
+      }
     }
 
     // Will never reach this
