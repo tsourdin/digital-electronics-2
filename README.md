@@ -112,3 +112,14 @@ Calculate the overflow times for three Timer/Counter modules that contain ATmega
    | `lcd_puts` | `const char * s` | string to be displayed | `lcd_puts("Hello World");`|
    | `lcd_command` | `uint8_t cmd` | instruction to send to LCD controller | `lcd_command(0);` |
    | `lcd_data` | `uint8_t data` | data byte to send t LCD controller | `lcd_data(65);` |
+
+   # Lab5
+
+   Use online manual of UART library and add the input parameters and description of the following functions.
+
+   | **Function name** | **Function parameter(s)** | **Description** | **Example** |
+   | :-- | :-- | :-- | :-- |
+   | `uart_init` | `UART_BAUD_SELECT(9600, F_CPU)` | Initialize UART to 8N1 and set baudrate to 9600&nbsp;Bd | `uart_init(UART_BAUD_SELECT(9600, F_CPU));` |
+   | `uart_getc` |  |  |
+   | `uart_putc` |  |  |
+   | `uart_puts` |  |  |
