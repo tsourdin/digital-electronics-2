@@ -39,7 +39,8 @@ int main(void)
     
     // Configure 16-bit Timer/Counter1 to transmit UART data
     // Set prescaler to 262 ms and enable overflow interrupt
-
+    TIM1_overflow_262ms();
+    TIM1_overflow_interrupt_enable();
 
     // Enables interrupts by setting the global interrupt mask
     sei();
@@ -48,6 +49,10 @@ int main(void)
     uart_puts("Print one line... ");
     uart_puts("done\r\n");
 
+    uart_puts("\033[5;32m");        // 4: underline style; 32: green foreground
+    uart_puts("This is all Green and Underlined.");
+    uart_puts("\033[0m");           // 0: reset all attributes
+    uart_puts("This is Normal text again.");
     // Infinite loop
     while (1)
     {
@@ -67,4 +72,32 @@ int main(void)
 ISR(TIMER1_OVF_vect)
 {
     // Transmit UART string(s)
+    // uart_puts("Paris\r\n");
+
+    uint8_t value;
+    char string[8];  // String for converted numbers by itoa()
+
+    value = uart_getc();
+    if (value != '\0') {  // Data available from UART
+    
+    // Display decimal code of received caracter
+    itoa(value, string, 10);
+    uart_puts("decimal code : ");
+    uart_puts(string);
+    uart_puts("\r\n");
+
+    // Display ASCII code of received character    
+    itoa(value, string, 16);
+    uart_puts("ASCII code : ");
+    uart_puts(string);
+    uart_puts("\r\n");
+
+    // Display binary code of received character    
+    itoa(value, string, 2);
+    uart_puts("binary code : ");
+    uart_puts(string);
+    uart_puts("\r\n");
+    uart_puts("\r\n");
+    }
+
 }

@@ -120,6 +120,6 @@ Calculate the overflow times for three Timer/Counter modules that contain ATmega
    | **Function name** | **Function parameter(s)** | **Description** | **Example** |
    | :-- | :-- | :-- | :-- |
    | `uart_init` | `UART_BAUD_SELECT(9600, F_CPU)` | Initialize UART to 8N1 and set baudrate to 9600&nbsp;Bd | `uart_init(UART_BAUD_SELECT(9600, F_CPU));` |
-   | `uart_getc` |  |  |
-   | `uart_putc` |  |  |
-   | `uart_puts` |  |  |
+   | `uart_getc` | none | Get received byte | `uart_getc();`
+   | `uart_putc` | char data | Put data to send to ringbuffer | `uart_putc(data);`
+   | `uart_puts` | char * s | Put string to the ringbuffer | `uart_puts(s);`
