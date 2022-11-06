@@ -111,6 +111,4 @@ ISR(TIMER1_OVF_vect)
         uart_puts(string);
         uart_puts("\r\n");
     }
-
-    
 }
