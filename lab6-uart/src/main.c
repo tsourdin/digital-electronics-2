@@ -49,10 +49,14 @@ int main(void)
     uart_puts("Print one line... ");
     uart_puts("done\r\n");
 
+    // Tests with ANSI escape sequences
+    /*
     uart_puts("\033[5;32m");        // 4: underline style; 32: green foreground
     uart_puts("This is all Green and Underlined.");
     uart_puts("\033[0m");           // 0: reset all attributes
     uart_puts("This is Normal text again.");
+    */
+
     // Infinite loop
     while (1)
     {
@@ -76,28 +80,37 @@ ISR(TIMER1_OVF_vect)
 
     uint8_t value;
     char string[8];  // String for converted numbers by itoa()
+    uint8_t parity = 0;
 
     value = uart_getc();
     if (value != '\0') {  // Data available from UART
     
-    // Display decimal code of received caracter
-    itoa(value, string, 10);
-    uart_puts("decimal code : ");
-    uart_puts(string);
-    uart_puts("\r\n");
+        // Display decimal code of received caracter
+        itoa(value, string, 10);
+        uart_puts(string);
+        uart_putc(' ');
 
-    // Display ASCII code of received character    
-    itoa(value, string, 16);
-    uart_puts("ASCII code : ");
-    uart_puts(string);
-    uart_puts("\r\n");
+        // Display ASCII code of received character    
+        itoa(value, string, 16);
+        uart_puts(string);
+        uart_putc(' ');
 
-    // Display binary code of received character    
-    itoa(value, string, 2);
-    uart_puts("binary code : ");
-    uart_puts(string);
-    uart_puts("\r\n");
-    uart_puts("\r\n");
+        // Display binary code of received character    
+        itoa(value, string, 2);
+        uart_puts(string);
+        uart_putc(' ');
+
+        // Display the parity of received character
+        for(uint8_t cycle = 0; cycle < 8; cycle++){
+            value &= 1;
+            parity = parity ^ value;
+            value = (value>>1);
+        }
+        
+        itoa(parity, string, 10);
+        uart_puts(string);
+        uart_puts("\r\n");
     }
 
+    
 }
