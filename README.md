@@ -123,3 +123,14 @@ Calculate the overflow times for three Timer/Counter modules that contain ATmega
    | `uart_getc` | none | Get received byte | `uart_getc();`
    | `uart_putc` | char data | Put data to send to ringbuffer | `uart_putc(data);`
    | `uart_puts` | char * s | Put string to the ringbuffer | `uart_puts(s);`
+
+   # Lab 7
+
+   | **Function name** | **Function parameters** | **Description** | **Example** |
+   | :-- | :-- | :-- | :-- |
+   | `twi_init` | None | Initialize TWI unit, enable internal pull-up resistors, and set SCL frequency | `twi_init();` |
+   | `twi_start` | uint8_t address, uint8_t mode | Start communication on I2C/TWI bus and send address byte | `twi_start(addr, TWI_READ);` |
+   | `twi_write` | uint8_t data | Send one data byte to I2C/TWI Slave device | `twi_write(data)` |
+   | `twi_read_ack` | None | Read one byte from the I2C/TWI Slave device and acknowledge it with ACK, i.e. communication will continue. | `twi_read_ack()` |
+   | `twi_read_nack` | None | Read one byte from the I2C/TWI Slave device and acknowledge it with NACK, i.e. communication will not continue. | `twi_read_nack()` |
+   | `twi_stop` | None | Generates stop condition on I2C/TWI bus. | `twi_stop();` |
