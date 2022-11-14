@@ -78,6 +78,38 @@ int main(void)
     // Enables interrupts by setting the global interrupt mask
     sei();
 
+    // Write random values to the first two ram modules 
+    uint8_t random;
+    twi_start(0x57, TWI_WRITE);
+    twi_write(0);
+    for(uint8_t i=0; i<10; i++){
+      random = rand();
+      twi_write(random);
+    }
+    twi_stop();
+
+    twi_start(0x57, TWI_WRITE);
+    twi_write(1);
+    for(uint8_t i=0; i<10; i++){
+      random = rand();
+      twi_write(random);
+    }
+    twi_stop();
+
+    uint8_t tab[5];
+    twi_start(0x57, TWI_READ);
+    twi_write(2);
+    for(uint8_t i=0; i<5; i++){
+      tab[i] = twi_read_ack();
+    }
+    twi_stop();
+
+    twi_start(0x57, TWI_WRITE);
+    for(uint8_t i=0; i<5; i++){
+      twi_write(tab[i]);
+    }
+    twi_stop();
+
     // Infinite loop
     while (1)
     {
