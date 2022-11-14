@@ -25,6 +25,7 @@
 #include <twi.h>            // I2C/TWI library for AVR-GCC
 #include <uart.h>           // Peter Fleury's UART library
 #include <stdlib.h>         // C library. Needed for number conversions
+#include <time.h>
 
 /* Global variables --------------------------------------------------*/
 // Declaration of "air" variable with structure "Air_parameters_structure"
@@ -41,7 +42,7 @@ struct Time_structure {
   uint8_t minutes;
   uint8_t seconds;
 
-}time;
+}time_struct;
 
 /* Function definitions ----------------------------------------------*/
 /**********************************************************************
@@ -84,6 +85,74 @@ int main(void)
     return 0;
 }
 
+// Read seconds from RTC DS3231 chip
+uint8_t rtc_read_seconds(){
+  uint8_t seconds;
+  if(twi_start(0x68,TWI_WRITE)==0){
+    twi_write(0x00);
+    seconds = twi_read_nack();
+  }
+  return seconds;
+}
+
+// Read minutes from RTC DS3231 chip
+uint8_t rtc_read_minutes(){
+  uint8_t minutes;
+  if(twi_start(0x68,TWI_WRITE)==0){
+    twi_write(0x00);
+    minutes = twi_read_nack();
+  }
+  return minutes;
+}
+
+// Read hours from RTC DS3231 chip
+uint8_t rtc_read_hours(){
+  uint8_t hours;
+  if(twi_start(0x68,TWI_WRITE)==0){
+    twi_write(0x00);
+    hours = twi_read_nack();
+  }
+  return hours;
+}
+
+// Write seconds to RTC DS3231 chip
+void rtc_write_seconds(){
+  time_t rawtime;
+  struct tm * timeinfo;
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+
+  if(twi_start(0x68,TWI_WRITE)==0){
+    twi_write(0x00);
+    twi_write(timeinfo->tm_sec); // Not sure at all of this
+  }
+}
+
+// Write minutes to RTC DS3231 chip
+void rtc_write_seconds(){
+  time_t rawtime;
+  struct tm * timeinfo;
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+
+  if(twi_start(0x68,TWI_WRITE)==0){
+    twi_write(0x01);
+    twi_write(timeinfo->tm_min); // Not sure at all of this
+  }
+}
+
+// Write hours to RTC DS3231 chip
+void rtc_write_seconds(){
+  time_t rawtime;
+  struct tm * timeinfo;
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+
+  if(twi_start(0x68,TWI_WRITE)==0){
+    twi_write(0x02);
+    twi_write(timeinfo->tm_hour); // Not sure at all of this
+  }
+}
 
 /* Interrupt service routines ----------------------------------------*/
 /**********************************************************************
@@ -153,9 +222,9 @@ ISR(TIMER1_OVF_vect)
     twi_write(0x00);
     twi_stop();
     twi_start(0x68, TWI_READ);
-    time.seconds = twi_read_ack();
-    time.minutes = twi_read_ack();
-    time.hours = twi_read_nack();
+    time_struct.seconds = twi_read_ack();
+    time_struct.minutes = twi_read_ack();
+    time_struct.hours = twi_read_nack();
   }
   
 }
