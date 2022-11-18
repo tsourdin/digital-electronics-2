@@ -134,3 +134,22 @@ Calculate the overflow times for three Timer/Counter modules that contain ATmega
    | `twi_read_ack` | None | Read one byte from the I2C/TWI Slave device and acknowledge it with ACK, i.e. communication will continue. | `twi_read_ack()` |
    | `twi_read_nack` | None | Read one byte from the I2C/TWI Slave device and acknowledge it with NACK, i.e. communication will not continue. | `twi_read_nack()` |
    | `twi_stop` | None | Generates stop condition on I2C/TWI bus. | `twi_stop();` |
+
+   # Lab 8
+
+   1. Use **AVR® Instruction Set Manual** from Microchip [Online Technical Documentation](https://onlinedocs.microchip.com/), find the description of selected instructions, and complete the table.
+
+   | **Instruction** | **Operation** | **Description** | **Cycles** |
+   | :-- | :-: | :-- | :-: |
+   | `add Rd, Rr` | Rd = Rd + Rr | Add two registers and store the result in Rd | 1 |
+   | `andi Rd, K` | Rd = Rd and K | Logical AND between register Rd and 8-bit constant K | 1 |
+   | `bld Rd, b` | Rd(b) = T | Copies the T bit in the SREG (Status Register) to bit b in register Rd | 1 |
+   | `bst Rd, b` | T = Rd(b) | Stores bit b from Rd to the T bit in SREG | 1 |
+   | `com Rd` | Rd = 0xFF - Rd | This instruction performs a One’s Complement of register Rd | 1 |
+   | `eor Rd, Rr` | Rd = Rd XOR Rr | Performs the logical EOR between the contents of register Rd and register Rr and places the result in the destination register Rd. | 1 |
+   | `mul Rd, Rr` | R1:R0 = Rd * Rr |  8-bit × 8-bit → 16-bit unsigned multiplication | 2 |
+   | `pop Rd` | Rd = STACK | loads register Rd with a byte from the STACK | 2 |
+   | `push Rr` | STACK = Rr |  stores the contents of register Rr on the STACK | 2 |
+   | `ret` | PC(15:0) = STACK | Returns from the subroutine | 4 |
+   | `rol Rd` | ... | Shifts all bits in Rd one place to the left. The C flag is shifted into bit 0 of Rd. Bit 7 is shifted into the C flag.  | 1 |
+   | `ror Rd` | ... | Shifts all bits in Rd one place to the right. The C flag is shifted into bit 7 of Rd. Bit 0 is shifted into the C flag.  | 1 |
