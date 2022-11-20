@@ -79,6 +79,8 @@ uint8_t multiply_accumulate_asm(uint8_t result, uint8_t a, uint8_t b);
  */
 uint8_t lfsr4_fibonacci_asm(uint8_t value);
 
+void asm_test();
+
 // Goxygen module with assembly functions ends here
 /** @} */
 
@@ -130,16 +132,16 @@ ISR(TIMER1_OVF_vect)
     static uint8_t value = 0;  // LFSR value
     static uint8_t no_of_values = 0;
     char string[8];            // String for converting numbers by itoa()
-
+    /*
     // Multiply-and-accumulate Assembly example
-    /*uint8_t a = 2;
+    uint8_t a = 2;
     uint8_t b = 3;
     value = multiply_accumulate_asm(value, a, b);
     itoa(value, string, 10);
     uart_puts(string);
     uart_puts("\r\n");
     */
-
+    
     // LFSR generator
     // Transmit LFSR value via UART in decimal
     itoa(value, string, 10);
@@ -158,4 +160,10 @@ ISR(TIMER1_OVF_vect)
         uart_puts("\r\n");
         no_of_values = 0;    
     }
+    
+   /*
+   // Test function to verify hex code
+    asm_test();
+   */
+   
 }
