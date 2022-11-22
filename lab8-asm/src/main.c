@@ -49,6 +49,7 @@
 #include <avr/interrupt.h>  // Interrupts standard C library for AVR-GCC
 #include "timer.h"          // Timer library for AVR-GCC
 #include <uart.h>           // Peter Fleury's UART library
+#include <gpio.h>
 #include <stdlib.h>         // C library. Needed for number conversions
 
 
@@ -78,6 +79,8 @@ uint8_t multiply_accumulate_asm(uint8_t result, uint8_t a, uint8_t b);
  * @note   Function programmed in AVR assembly language.
  */
 uint8_t lfsr4_fibonacci_asm(uint8_t value);
+uint8_t lfsr8_fibonacci_asm(uint8_t value);
+uint8_t lfsr4_fibonacci_c(uint8_t value);
 
 void asm_test();
 
@@ -95,6 +98,16 @@ void asm_test();
  **********************************************************************/
 int main(void)
 {
+    // Initialize GPIOs
+    GPIO_mode_output(&DDRB, PB0);
+    GPIO_mode_output(&DDRB, PB1);
+    GPIO_mode_output(&DDRB, PB2);
+    GPIO_mode_output(&DDRB, PB3);
+    GPIO_mode_output(&DDRB, PB4);
+    GPIO_mode_output(&DDRB, PB5);
+    GPIO_mode_output(&DDRB, PB6);
+    GPIO_mode_output(&DDRB, PB7);
+
     // Initialize USART to asynchronous, 8N1, 9600
     uart_init(UART_BAUD_SELECT(9600, F_CPU));
 
@@ -141,15 +154,18 @@ ISR(TIMER1_OVF_vect)
     uart_puts(string);
     uart_puts("\r\n");
     */
-    
+
     // LFSR generator
     // Transmit LFSR value via UART in decimal
     itoa(value, string, 10);
     uart_puts(string);
     uart_putc(' ');
+    itoa(value, string, 2);
+    uart_puts(string);
+    uart_puts("\r\n");
 
     // Generate one LFSR value and increment number of generated LFSR values
-    value = lfsr4_fibonacci_asm(value);
+    value = lfsr4_fibonacci_c(value);
     no_of_values++;
 
     // If LFSR value is equal to 0 then print length info and start again
@@ -158,10 +174,13 @@ ISR(TIMER1_OVF_vect)
         itoa(no_of_values, string, 10);
         uart_puts(string);
         uart_puts("\r\n");
-        no_of_values = 0;    
+        no_of_values = 0;
     }
-    
-   /*
+    for(uint8_t i=0;i<8;i++){
+        if((value & (1 << i)) == 0) GPIO_write_low(&PORTB, i);
+        else GPIO_write_high(&PORTB, i);
+    }
+    /*
    // Test function to verify hex code
     asm_test();
    */

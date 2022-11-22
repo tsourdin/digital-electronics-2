@@ -28,7 +28,7 @@
 #define in_out_reg r24
 #define temp0      r26
 #define temp1      r27
-
+#define temp2      r28
 
 ;* Function definitions ------------------------------------------------
 ;**********************************************************************
@@ -85,6 +85,76 @@ lfsr4_fibonacci_asm:
                            ; | 0 | 0 | 0 | 0 | 2 | 1 | 0 | C |
                            ; +---+---+---+---+---+---+---+---+
 
+    pop temp1              ; Restore used registers from Stack
+    pop temp0
+    ret                    ; Return from subroutine
+
+;**********************************************************************
+;* Function: lfsr8_fibonacci_asm
+;* Purpose:  LFSR-based 8-bit pseudo-random generator with Fibonacci
+;*           architecture. Taps are 8, 6, 5, 4.
+;*
+;*   in_out_reg:       
+;*     7   6   5   4   3   2   1   0                 
+;*   +---+---+---+---+---+---+---+---+    +-----+
+;*   | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |<---| NOT |
+;*   +---+---+---+---+---+---+---+---+    +-----+ 
+;*     |       |   |   |                     ^
+;*     +-------+   +---+                     |
+;*     |  XOR  |   |XOR|                     |
+;*     +-------+   +---+                     |
+;*         |         |                       |
+;*         +---------+                       |
+;*         |   XOR   |-----------------------+
+;*         +---------+
+;*
+;* Input:    r24 - Current value of LFSR
+;* Return:   r24 - New value of LFSR
+;**********************************************************************/
+.global lfsr8_fibonacci_asm
+lfsr8_fibonacci_asm:
+    push temp0             ; Save used registers on Stack
+    push temp1
+    push temp2
+    bst in_out_reg, 7      ; Copy FIRST tap to T-flag bit...
+    bld temp0, 0           ; ...and then to temp0 at position 0
+                           ; temp0:                        0
+                           ; +---+---+---+---+---+---+---+---+
+                           ; | x | x | x | x | x | x | x | 8 |
+                           ; +---+---+---+---+---+---+---+---+
+
+    bst in_out_reg, 5      ; Copy SECOND tap to T-flag bit...
+    bld temp1, 0           ; ...and then to temp1 at position 0
+                           ; temp1:                        0
+                           ; +---+---+---+---+---+---+---+---+
+                           ; | x | x | x | x | x | x | x | 6 |
+                           ; +---+---+---+---+---+---+---+---+
+
+    eor temp0, temp1       ; Xor both taps : temp0=temp0 XOR temp1
+
+    ; Do the same thing for THIRD and FOURTH taps :
+    bst in_out_reg, 4
+    bld temp1, 0
+    bst in_out_reg, 3
+    bld temp2, 0
+    eor temp1, temp2
+    eor temp0, temp1
+
+    com temp0              ; Invert Xor temp0 = not temp0
+    
+    ror temp0              ; Rotate register right and move bit0 to C-flag
+                           ; temp0:
+                           ; +---+---+---+---+---+---+---+---+
+                           ; | x | x | x | x | x | x | x | x | --> C
+                           ; +---+---+---+---+---+---+---+---+
+
+    rol in_out_reg         ; Rotate register left and move C-flag to bit0
+                           ; in_out_reg:       3   2   1   0
+                           ; +---+---+---+---+---+---+---+---+
+                           ; | 6 | 5 | 4 | 3 | 2 | 1 | 0 | C | <-- C
+                           ; +---+---+---+---+---+---+---+---+
+
+    pop temp2
     pop temp1              ; Restore used registers from Stack
     pop temp0
     ret                    ; Return from subroutine
